@@ -1,0 +1,44 @@
+version: "3.9"
+services:
+  loadbalancer:
+    build: ./loadbalancer/
+    ports:
+      - "10000:5000"
+    volumes:
+      - ./loadbalancer/:/code
+    environment:
+      FLASK_DEBUG: True
+    depends_on:
+      - redis
+  pyservice1:
+    build: ./pyservice1/
+    ports:
+      - "10100:5000"
+    volumes:
+      - ./pyservice1/:/code
+    environment:
+      FLASK_DEBUG: True
+    depends_on:
+      - redis
+  pyservice2:
+    build: ./pyservice2/
+    ports:
+      - "10200:5000"
+    volumes:
+      - ./pyservice2/:/code
+    environment:
+      FLASK_DEBUG: True
+    depends_on:
+      - redis
+  monitoring:
+    build: ./monitoring/
+    ports:
+      - "11000:5000"
+    volumes:
+      - ./monitoring/:/code
+    environment:
+      FLASK_DEBUG: True
+    depends_on:
+      - redis
+  redis:
+    image: "redis:alpine"
